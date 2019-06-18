@@ -22,6 +22,9 @@ class Device extends Component {
         }
     }
 
+    /**
+     * On Mount, Connect to Device and Fetch Services
+     */
     componentDidMount(){
         const {id, connect} = this.props;
         connect(id)
@@ -29,6 +32,10 @@ class Device extends Component {
             .catch(err=>this.setState({errorMessage: err}));
     }
 
+    /**
+     * Transform A List of Characteristics into something more human readable
+     * @param characteristics
+     */
     handleServicesAndCharacteristics({characteristics}){
         const services = Array.from(characteristics.reduce((a, {properties, characteristic, service})=>{
             return a.set(service, (a.get(service) || []).concat({characteristic, properties: Object.keys(properties)}));
@@ -38,6 +45,10 @@ class Device extends Component {
         this.setState({services});
     }
 
+    /**
+     * Method that initiates a read on the battery level
+     * Alerts the final outcome
+     */
     handleCheckBatteryLevel(){
         const {readBattery, id} = this.props;
         readBattery(id)
@@ -45,6 +56,9 @@ class Device extends Component {
             .catch(err=>this.setState({errorMessage: err}))
     }
 
+    /**
+     * On Unmount, disconnect from device
+     */
     componentWillUnmount(){
         const {disconnect, id} = this.props;
         disconnect(id)

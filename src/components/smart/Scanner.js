@@ -5,16 +5,23 @@ import DeviceList from "../dummy/DeviceList";
 
 class Scanner extends Component {
 
-  render(){
-      const {startScan, peripherals, onSelect} = this.props;
-      const devices = Array.from(peripherals.values());
-      return <View>
-          <Button primary full onPress={startScan}>
-              <Text>Start Scan</Text>
-          </Button>
-          <DeviceList data={devices} onPress={onSelect}/>
-      </View>
-  }
+    /**
+     * TODO:
+     *  (1) Transform a Map object to an array of devices
+     *  (2) Pass the devices array to DeviceList
+     *
+      * @returns {*}
+     */
+    render(){
+          const {startScan, peripherals, onSelect} = this.props;
+          const devices = []; /// code expected here
+          return <View>
+              <Button primary full onPress={startScan}>
+                  <Text>Start Scan</Text>
+              </Button>
+              <DeviceList data={[]} onPress={onSelect}/>
+          </View>
+      }
 }
 
 export default withBluetooth(Scanner);
