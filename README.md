@@ -29,7 +29,7 @@ On github, **FORK** the project first before continueing.
 *If you're thinking of passing this line, then you agree to have successfully forked the project*
 
 ```
-git clone <url to github of this FORKED project>
+git clone <url to github of YOUR FORKED project>
 cd CciBleTest
 yarn
 ```
