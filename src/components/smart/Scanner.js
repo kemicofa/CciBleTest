@@ -17,12 +17,12 @@ class Scanner extends Component {
      */
     render(){
           const {startScan, peripherals, onSelect} = this.props;
-          const devices = []; /// code expected here
+          const devices = Array.from(peripherals.values());
           return <View>
               <Button primary full onPress={startScan}>
                   <Text>Start Scan</Text>
               </Button>
-              <DeviceList data={[]} onPress={onSelect}/>
+              <DeviceList data={devices} onPress={onSelect}/>
           </View>
       }
 }
