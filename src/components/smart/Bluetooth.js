@@ -18,10 +18,14 @@ export const withBluetooth = SomeComponent => props => <BluetoothContext.Consume
     {(bluetoothProps)=><SomeComponent {...props} {...bluetoothProps}/>}
 </BluetoothContext.Consumer>;
 
+/**
+ * Total of 24 pts available
+ */
 export default class Bluetooth extends Component {
 
     /**
-     * TODO: Start the BleManager
+     * TODO: (1pts)
+     *  Start the BleManager
      * @param props
      */
     constructor(props){
@@ -42,9 +46,8 @@ export default class Bluetooth extends Component {
     }
 
     /**
-     * TODO:
+     * TODO: (4 pts)
      *  (1) Add "change" event listener to AppState
-     *  (2) -- SKIP THIS LINE and go to (3) --
      *  (3) Add "BleManagerDiscoverPeripheral", "BleManagerStopScan", "BleManagerDisconnectPeripheral", listeners to the bleManagerEmitter
      *  (4) The listeners in (3) should be memorized so that they can be removed on componentWillUnmount
      *  (5) Request Android Permission to access COARSE LOCATION
@@ -68,7 +71,8 @@ export default class Bluetooth extends Component {
     }
 
     /**
-     * TODO: Remove the three handlers added in the componentDidMount (3)
+     * TODO: (1 pts)
+     *      Remove the three handlers added in the componentDidMount (3)
      */
     componentWillUnmount() {
         /// code expected
@@ -80,7 +84,8 @@ export default class Bluetooth extends Component {
     }
 
     /**
-     * TODO: Set "scanning" to false
+     * TODO: (1 pts)
+     *      Set "scanning" to false
      */
     handleStopScan() {
         /// code expected
@@ -88,10 +93,11 @@ export default class Bluetooth extends Component {
     }
 
     /**
-     * TODO:
+     * TODO: (4 pts)
      *  (1) If already scanning, do nothing
      *  (2) Start the scan for a duration of 10 seconds
      *  (3) Search and memorize devices that have the Battery Level Service
+     *  (4) Correctly handle possible exceptions
      */
     startScan() {
         /// code expected
@@ -100,7 +106,7 @@ export default class Bluetooth extends Component {
     }
 
     /**
-     * TODO:
+     * TODO: (3 pts)
      *
      *  (1) Check to see if the new peripheral already exists in peripherals
      *  (2) If it doesn't exist then add the new peripheral to the peripherals Map object
@@ -115,9 +121,10 @@ export default class Bluetooth extends Component {
 
     /**
      *
-     * TODO:
+     * TODO: (3 pts)
      *  (1) Read the battery level characteristic of the battery level service of the currently connected bluetooth device
      *  (2) Return the battery level
+     *  (3) Correctly handle possible exceptions
      *
      * @param id
      * @returns {Promise<number>}
@@ -128,10 +135,14 @@ export default class Bluetooth extends Component {
     }
 
     /**
-     * TODO:
+     *
+     * Method that connects to a device with a given identifier (id)
+     *
+     * TODO: (4 pts)
      *  (1) Connect to the device
      *  (2) Retrieve services and characteristics
      *  (3) Return data from (2)
+     *  (4) Correctly handle possible exceptions
      *
      * @param id
      * @returns {Promise<"react-native-ble-manager".PeripheralInfo>}
@@ -141,9 +152,13 @@ export default class Bluetooth extends Component {
     }
 
     /**
-     * TODO:
+     *
+     * Method that disconnects from a device with a given identifier
+     *
+     * TODO: (3 pts)
      *  (1) Disconnect from device
      *  (2) Remove peripheral (hint: Check BleManager source code)
+     *  (3) Correctly handle possible exceptions
      *
      * @param id
      * @returns {Promise<void>}

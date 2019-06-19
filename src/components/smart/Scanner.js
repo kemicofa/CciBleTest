@@ -3,11 +3,14 @@ import {withBluetooth} from "./Bluetooth";
 import {Button, Text, View} from "native-base";
 import DeviceList from "../dummy/DeviceList";
 
+/**
+ * Total of 2 pts available
+ */
 class Scanner extends Component {
 
     /**
-     * TODO:
-     *  (1) Transform a Map object to an array of devices
+     * TODO: (2 pts)
+     *  (1) Transform the peripherals Map object to an array of devices
      *  (2) Pass the devices array to DeviceList
      *
       * @returns {*}
