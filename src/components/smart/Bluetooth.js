@@ -9,7 +9,7 @@ export const BluetoothContext = React.createContext();
 
 const BLUETOOTH_SIG = {
     BATTERY: {
-        SERVICE: "180F",
+        SERVICE: "180D",
         CHARACTERISTIC: "00002A19-0000-1000-8000-00805F9B34FB"
     }
 };
@@ -18,20 +18,19 @@ export const withBluetooth = SomeComponent => props => <BluetoothContext.Consume
     {(bluetoothProps)=><SomeComponent {...props} {...bluetoothProps}/>}
 </BluetoothContext.Consumer>;
 
-/**
- * Total of 24 pts available
- */
+
 export default class Bluetooth extends Component {
 
     /**
-     * TODO: (1pts)
-     *  Start the BleManager
+     *  Start the BleManager -- ajouter au componentDidMount
      * @param props
      */
+
     constructor(props){
         super(props);
 
         /// Code expected here
+        BleManager.start({showAlert: false})
 
         this.state = {
             peripherals: new Map(),
@@ -42,22 +41,39 @@ export default class Bluetooth extends Component {
         this.handleStopScan                     = this.handleStopScan.bind(this);
         this.handleDisconnectedPeripheral       = this.handleDisconnectedPeripheral.bind(this);
         this.handleAppStateChange               = this.handleAppStateChange.bind(this);
-
+        this.handleAppStateChange               = this.handleAppStateChange.bind(this);
     }
 
-    /**
-     * TODO: (4 pts)
-     *  (1) Add "change" event listener to AppState
-     *  (3) Add "BleManagerDiscoverPeripheral", "BleManagerStopScan", "BleManagerDisconnectPeripheral", listeners to the bleManagerEmitter
-     *  (4) The listeners in (3) should be memorized so that they can be removed on componentWillUnmount
-     *  (5) Request Android Permission to access COARSE LOCATION
-     *
-     *  You can assume that this method does not throw any errors and does not return any information
-     */
+  
     componentDidMount() {
-        /// code expected
-        console.log("Bluetooth: Component will mount not implemented");
+        AppState.addEventListener('change', this.handleAppStateChange);
 
+        BleManager.start({showAlert: false})
+        .then(() => {
+            // Success code
+            console.log('Module initialized');
+        });
+
+        this.handlerDiscover   = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
+        this.handlerStop       = bleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
+        this.handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
+        this.handlerUpdate     = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+    
+        if (Platform.OS === 'android' && Platform.Version >= 23) {
+            PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
+                if (result) {
+                  console.log("Permission is OK");
+                } else {
+                  PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
+                    if (result) {
+                      console.log("User accept");
+                    } else {
+                      console.log("User refuse");
+                    }
+                  });
+                }
+          });
+        }
     }
 
     handleAppStateChange(nextAppState) {
@@ -70,52 +86,55 @@ export default class Bluetooth extends Component {
         this.setState({appState: nextAppState});
     }
 
-    /**
-     * TODO: (1 pts)
-     *      Remove the three handlers added in the componentDidMount (3)
-     */
     componentWillUnmount() {
-        /// code expected
-        console.log("Bluetooth: Component will unmount not implemented");
+        this.handlerDiscover.remove();
+        this.handlerStop.remove();
+        this.handlerDisconnect.remove();
+        this.handlerUpdate.remove();
     }
 
     handleDisconnectedPeripheral(data) {
         console.log('Disconnected from ' + data.peripheral);
     }
 
-    /**
-     * TODO: (1 pts)
-     *      Set "scanning" to false
-     */
     handleStopScan() {
-        /// code expected
+        this.setState({ scanning: false });
         console.log("Bluetooth: Handle stop scan not implemented");
     }
+    
 
     /**
      * TODO: (4 pts)
-     *  (1) If already scanning, do nothing
-     *  (2) Start the scan for a duration of 10 seconds
      *  (3) Search and memorize devices that have the Battery Level Service
      *  (4) Correctly handle possible exceptions
      */
     startScan() {
         /// code expected
+        setTimeout(() => {
+        if (!this.state.scanning) {
+            this.setState({peripherals: new Map()});
+            BleManager.scan([], 3, true).then((results) => {
+                console.log('Scanning...');
+                this.setState({scanning:true});
+            });
+        }}, 10000);
+
+
         console.log("Bluetooth: Start scan not implemented");
 
     }
 
     /**
-     * TODO: (3 pts)
-     *
-     *  (1) Check to see if the new peripheral already exists in peripherals
-     *  (2) If it doesn't exist then add the new peripheral to the peripherals Map object
-     *  (3) Update the state with peripherals
-     *
      * @param peripheral
      */
     handleDiscoverPeripheral(peripheral){
         /// code expected
+
+        var peripherals = this.state.peripherals;
+        if (!peripherals.has(peripheral.id)){
+            peripherals.set(peripheral.id, peripheral);
+            this.setState({ peripherals })
+        }
         console.log("Bluetooth: handle discover peripheral not implemented")
     }
 
@@ -130,6 +149,19 @@ export default class Bluetooth extends Component {
      * @returns {Promise<number>}
      */
     async readBattery(id){
+        BleManager.read(BLUETOOTH_SIG)
+        .then((readData) => {
+            // Success code
+            console.log('Read: ' + readData);
+
+            const buffer = Buffer.Buffer.from(readData);
+            const sensorData = buffer.readUInt8(1, true);
+        })
+        .catch((error) => {
+            // Failure code
+            console.log(error);
+        });
+
         /// code expected
         throw new Error("Bluetooth: read battery level not implemented");
     }
@@ -148,7 +180,13 @@ export default class Bluetooth extends Component {
      * @returns {Promise<"react-native-ble-manager".PeripheralInfo>}
      */
     async connect(id){
-        throw new Error("Bluetooth: connect to device not implemented");
+        var peripherals = this.state.peripherals;
+        for (var i = 0; i < results.length; i++) {
+          var peripheral = results[i];
+          peripheral.connected = true;
+          peripherals.set(peripheral.id, peripheral);
+          this.setState({ peripherals });
+        }   
     }
 
     /**
@@ -164,6 +202,7 @@ export default class Bluetooth extends Component {
      * @returns {Promise<void>}
      */
     async disconnect(id){
+        BleManager.disconnect(peripheral.id);
         throw new Error("Bluetooth: disconnect from device not implemented")
     }
 
