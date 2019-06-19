@@ -10,19 +10,22 @@ class Scanner extends Component {
 
     /**
      * TODO: (2 pts)
-     *  (1) Transform the peripherals Map object to an array of devices
-     *  (2) Pass the devices array to DeviceList
+     *  (1) Transform the peripherals Map object to an array of devices x
+     *  (2) Pass the devices array to DeviceList x
      *
       * @returns {*}
      */
     render(){
           const {startScan, peripherals, onSelect} = this.props;
-          const devices = []; /// code expected here
+          const devices = [];
+          renderItem = ({ devices }) => (<View key={devices.key}><Text>{devices.title}</Text></View>);
+           /// code expected here
+
           return <View>
               <Button primary full onPress={startScan}>
                   <Text>Start Scan</Text>
               </Button>
-              <DeviceList data={[]} onPress={onSelect}/>
+              <DeviceList data={renderItem} onPress={onSelect}/>
           </View>
       }
 }
