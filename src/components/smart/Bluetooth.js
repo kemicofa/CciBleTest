@@ -175,7 +175,7 @@ export default class Bluetooth extends Component {
         /// code expected
         try {
             // (1)
-            const batteryAkaHeartRate = await BleManager.read(id, "180D", "00002A39-0000-1000-8000-00805F9B34FB");
+            const batteryAkaHeartRate = await BleManager.read(id, BLUETOOTH_SIG.BATTERY.SERVICE, BLUETOOTH_SIG.BATTERY.CHARACTERISTIC);
             console.log(batteryAkaHeartRate);
             // (2)
             return batteryAkaHeartRate;
