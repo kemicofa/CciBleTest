@@ -1,30 +1,27 @@
-import React, {Component} from "react";
-import {withBluetooth} from "./Bluetooth";
-import {Button, Text, View} from "native-base";
+import React, { Component } from "react";
+import { withBluetooth } from "./Bluetooth";
+import { Button, Text, View } from "native-base";
 import DeviceList from "../dummy/DeviceList";
 
-/**
- * Total of 2 pts available
- */
 class Scanner extends Component {
 
-    /**
-     * NOT TODO: (2 pts)
-     *  (1) Transform the peripherals Map object to an array of devices
-     *  (2) Pass the devices array to DeviceList
-     *
-      * @returns {*}
-     */
-    render(){
-          const {startScan, peripherals, onSelect} = this.props;
-          const devices = Array.from(peripherals.values()); /// code expected here
-          return <View>
-              <Button primary full onPress={startScan}>
-                  <Text>Start Scan</Text>
-              </Button>
-              <DeviceList data={devices} onPress={onSelect}/>
-          </View>
-      }
+    render() {
+        const { startScan, peripherals, onSelect, toFavorites } = this.props;
+        const devices = Array.from(peripherals.values());
+
+        return <View>
+            <Button primary style={{margin:8}} full onPress={toFavorites}>
+                <Text>See Favorites</Text>
+            </Button>
+
+            <Button primary full onPress={startScan} style={{marginTop:32, margin:8}}>
+                <Text>Start Scan</Text>
+            </Button>
+            <DeviceList data={devices} onPress={onSelect} />
+
+        </View>
+    }
+
 }
 
 export default withBluetooth(Scanner);

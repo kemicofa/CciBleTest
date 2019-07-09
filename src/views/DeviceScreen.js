@@ -5,7 +5,7 @@ import Device from "../components/smart/Device";
 class DeviceScreen extends Component {
 
     static navigationOptions = {
-        title: "Device"
+        title: "Device      "
     };
 
     render(){

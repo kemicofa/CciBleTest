@@ -1,22 +1,31 @@
-import React, {Component} from "react";
-import {Container, Content} from "native-base";
+import React, { Component } from "react";
+import { Container, Content } from "native-base";
 import Scanner from "../components/smart/Scanner";
 
 class ScannerScreen extends Component {
 
     static navigationOptions = {
-        title: "Scanner"
+        title: "Scanner      ",
     };
 
-    onDeviceSelected(id){
-        const {navigation} = this.props;
-        navigation.navigate("Device", { id })
+    constructor(props) {
+        super(props);
     }
 
-    render(){
+    onDeviceSelected(id) {
+        const { navigation } = this.props;
+        navigation.navigate("Device", { id})
+    }
+
+    toFavorites() {
+        const { navigation } = this.props;
+        navigation.navigate("Favorites")
+    }
+
+    render() {
         return <Container>
             <Content>
-                <Scanner onSelect={(id)=>this.onDeviceSelected(id)}/>
+                <Scanner onSelect={(id) => this.onDeviceSelected(id)} toFavorites={() => this.toFavorites()} />
             </Content>
         </Container>
     }
